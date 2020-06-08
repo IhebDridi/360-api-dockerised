@@ -16,37 +16,46 @@ exports.SignUp =  (req,res) =>{
     
     //try to find a user with the submitted email
     User.find({email: req.body.email}).exec().then(user =>{
+        console.log("trying to sign up the new user")
         //if the user exist, exit with a message saying that it does
         if(user.length>=1){
+            console.log("user exist")
             //409 conflict or 422 unprocessable entity
             res.status(409).json({message: "User exist"});
         }
         //if the user does not exist, start the process of creating one
         else{
+            console.log("hashing")
             //Try to hash the submitted password
             bcrypt.hash(req.body.Password, 10, (err,hash) =>{
                 //if an error occurs, status(500) is returned along side the error
                 if(err){
+                    console.log("error while hashing")
                     //hashing problem
                     return res.status(500).json({error: err});
                 }
                 //if the password has been successfully hashed, a user is created and saved in the database
                 else{
+                    console.log("creating user")
                     //creating user...
                     const user = new User({
                         email: req.body.email,
                         Password: hash,
                     });
+                    console.log("saving user")
                     //saving...
                     user.save().then(result =>{
+                        console.log("user saved")
                         res.status(201).json({message: result});
                     }).catch(err =>{
+                        console.log("error while saving the user")
                         res.status(500).json({message: err});
                     });
                 }
             })
         }
     }).catch(err =>{
+        console.log("error")
         res.status(500).json({message: err.message})
     })
 }

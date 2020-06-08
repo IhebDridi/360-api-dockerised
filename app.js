@@ -2,13 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan")
 const bodyParser = require("body-parser");
+
 //const cors = require("cors");
 
 const app = express();
+console.log('mongo')
+console.log(process.env.MONGODB)
+console.log(process.env.MONGODB)
 
 mongoose.connect(process.env.MONGODB,{useNewUrlParser: true,useUnifiedTopology: true,useCreateIndex: true} , () =>{
     console.log("Connected to Database...",process.env.MONGODB)
 })
+
 
 //MiddleWare
 app.use(morgan("dev"));
@@ -30,10 +35,16 @@ app.use((req,res,next) =>{
 const UserRoutes = require('./api/routes/User');
 const productRoutes = require("./api/routes/Product")
 const ProfileRouter = require("./api/routes/Profile")
+const ProjectRouter = require("./api/routes/Project")
+const VersionRouter = require("./api/routes/Version")
+const ModeltRouter = require("./api/routes/Models")
 
 app.use("/Users",UserRoutes);
 app.use("/Produc",productRoutes);
-app.use("/ProfileData",ProfileRouter)
+app.use("/ProfileData",ProfileRouter);
+app.use("/ProjectData",ProjectRouter);
+app.use("/versionData",VersionRouter);
+app.use("/modelData",ModeltRouter)
 
 //If the router is not valid
 app.use((req, res, next) =>{
